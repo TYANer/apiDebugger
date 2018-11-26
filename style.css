@@ -1,0 +1,57 @@
+/* reset-start */
+body {
+  margin: 0;
+  padding: 0;
+}
+/* reset-end */
+body {
+  background: #f4f5f6;
+}
+header {
+  height: 60px;
+  line-height: 60px;
+  background: #2a2a2a;
+}
+.logo {
+  color: #fff;
+  font-size: 24px;
+}
+.container {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+.box-card {
+  margin-top: 20px;
+}
+
+.el-card__header {
+  background: #f4f5f6;
+}
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form-item {
+  margin-bottom: 10px;
+}
+.el-input-group>.el-input__inner {
+  width: 274px;
+}
+.el-checkbox+.el-checkbox {
+  margin-left: 0;
+}
+.el-checkbox {
+  margin-right: 30px;
+}
