@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <div class="container logo">logo</div>
+    </header>
+
+    <section class="container">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>配置信息</span>
+        </div>
+        <el-form :inline="true" label-position="top" :model="formData" label-width="100px">
+          <el-row>
+            <el-form-item label="环境">
+              <el-select v-model="formData.env" placeholder="请选择">
+                <el-option v-for="item in selectInfo.env" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="服务">
+              <el-select v-model="formData.service" placeholder="请选择">
+                <el-option v-for="item in selectInfo.service" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="游戏">
+              <el-select v-model="formData.game" placeholder="请选择">
+                <el-option v-for="item in selectInfo.game" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="验证方法">
+              <el-radio-group v-model="formData.authWay">
+                <el-radio label="auth"></el-radio>
+                <el-radio label="auth2"></el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-row>
+
+          <el-row>
+            <el-form-item label="验证类型">
+              <el-radio-group v-model="formData.authType">
+                <el-radio-button label="0">用户名密码</el-radio-button>
+                <el-radio-button label="1">Token</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="用户名" v-if="formData.authType == '0'">
+              <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
+                <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
+                  <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="密码" v-if="formData.authType == '0'">
+              <el-input v-model="formData.password" style="width:220px;"></el-input>
+            </el-form-item>
+            <el-form-item label="Token" v-else>
+              <el-input v-model="formData.token"></el-input>
+            </el-form-item>
+          </el-row>
+
+          <el-row>
+            <el-form-item label="Scope">
+              <el-checkbox-group v-model="formData.scopeList">
+                <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-row>
+
+          <el-row>
+            <el-form-item label="请求URL">
+              <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
+                <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
+                  placeholder="请求方法">
+                  <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-button slot="append" @click="addParams">添加参数</el-button>
+              </el-input>
+            </el-form-item>
+          </el-row>
+          <el-row v-for="(item,index) in formData.params">
+            <el-form-item>
+              <el-input placeholder="请输入内容" v-model="formData.params[index].key">
+                <template slot="prepend">key</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input placeholder="请输入内容" v-model="formData.params[index].value">
+                <template slot="prepend">value</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="el-icon-delete" plain type="danger" @click="removeParam(index)"></el-button>
+            </el-form-item>
+          </el-row>
+          <el-form-item>
+            <el-button type="primary" @click="send">发送请求</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>请求结果</span>
+        </div>
+        <pre><code id="response">暂无结果</code></pre>
+      </el-card>
+    </section>
+  </div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- import Axios -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        selectInfo: {
+          env: ['dev', 'beta', 'gold'],
+          service: ['auth2', 'chat', 'gateway', 'message', 'pay2', 'translate', 'auth', 'file-server', 'geoip', 'link', 'pay', 'ucenter'],
+          game: ['tgstest', 'ba', 'G301', 'g303', 'B001', 'c4'],
+          userType: ['anonymous', 'tap4fun', 'system', 'game', 'facebook', 'twitter', 'weibo', 'googleplus', 'mobojoy', '360', 'uc', 'downjoy',
+            'xiaomi', 'qq', 'weixin', 'ly', 'openweixin', 'openqq', 'baidu', 'vivo', 'huawei', 'oppo', '1sdk', 'gamecenter'],
+          queryMethod: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'],
+          scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'sauth', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
+        },
+        formData: {
+          env: 'dev',
+          service: 'pay2',
+          game: 'tgstest',
+          clientId: '',
+          authType: '0',
+          userType: 'game',
+          username: 'tgstest-admin',
+          password: '4ECfyqRERWXkzUwMn6cg',
+          token: '',
+          authWay: 'auth',
+          queryMethod: 'GET',
+          queryPath: '/buylist',
+          params: [],
+          scopeList: []
+        },
+        nameUrl: '',
+        accessToken: ''
+      }
+    },
+    methods: {
+      // 添加参数
+      addParams() {
+        this.formData.params.push({})
+      },
+      // 删除参数
+      removeParam(idx) {
+        this.formData.params.splice(idx, 1)
+      },
+      // 获取参数
+      getParams() {
+        let l = this.formData.params.length
+        let data = {}
+        if (l) {
+          for (let i = 0; i < l; i++) {
+            let key = this.formData.params[i].key
+            let value = this.formData.params[i].value
+            data[key] = value
+          }
+        }
+        return data
+      },
+      send() {
+        this.formData.clientId = this.formData.game + ':1.0.0'
+        this.getNameAddr(this.formData.env)
+      },
+      // 获取name服务的地址
+      getNameAddr(env) {
+        let that = this
+        if (env != "gold") {
+          env = "-" + env
+        } else {
+          env = ''
+        }
+        let url = "https://eve" + env + ".pf.tap4fun.com:10443/config"
+        axios({
+          method: 'GET',
+          url: url,
+          params: {
+            client_id: that.formData.clientId
+          },
+          responseType: 'json'
+        }).then(async function (res) {
+          that.nameUrl = res.data.cfn.servers.name
+          let authdata = { client_id: that.formData.clientId };
+          let apiData = { client_id: that.formData.clientId, service: that.formData.service };
+          // 如果验证类型为”用户名密码“，则先获取token
+          if (that.formData.authType == "0") {
+            authdata.service = that.formData.authWay
+            let authUrl = await that.getServiceAddr('GET', authdata)
+            let authorizeData = {}
+            authorizeData.client_id = that.formData.clientId
+            authorizeData.user = that.formData.userType + ':' + that.formData.username
+            authorizeData.password = that.formData.password
+            authorizeData.scope = that.formData.scopeList.join()
+            await that.authorize(authUrl, authorizeData)
+          } else {
+            that.accessToken = that.formData.token
+          }
+          // 调用获取服务的方法
+          serviceUrl = await that.getServiceAddr(that.formData.queryMethod, apiData)
+          let serviceData = that.getParams()
+          serviceData.access_token = that.accessToken
+          // 发送api请求
+          that.checkAPI(serviceUrl, serviceData)
+        })
+      },
+      // 获取具体服务的地址
+      async getServiceAddr(queryMethod, data) {
+        let url
+        await axios({
+          url: this.nameUrl + "/locate",
+          method: queryMethod,
+          params: data,
+          responseType: "json"
+        }).then((res) => {
+          url = res.data.schema + "://" + res.data.host + ":" + res.data.https_port + res.data.path
+        })
+        return url
+      },
+      // 获取access_token
+      async authorize(baseUrl, data) {
+        await axios({
+          url: baseUrl + "/authorize", //请求地址
+          method: 'GET',   //请求方式
+          params: data, //请求参数
+          responseType: "json"
+        }).then((res) => {
+          this.accessToken = res.data.access_token
+        })
+      },
+      // 调试api
+      checkAPI(baseUrl, data) {
+        axios({
+          url: baseUrl + this.formData.queryPath, //请求地址
+          method: 'GET',   //请求方式
+          params: data, //请求参数
+          responseType: "json"
+        }).then((res) => {
+          document.getElementById("response").textContent = JSON.stringify(res, null, 2);
+        })
+      }
+    }
+  })
+</script>
+
+</html>
