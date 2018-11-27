@@ -19,7 +19,7 @@
         <div slot="header" class="clearfix">
           <span>配置信息</span>
         </div>
-        <el-form :inline="true" label-position="top" :model="formData" label-width="100px">
+        <el-form :inline="true" label-position="top" :model="formData" label-width="100px" ref="baseForm" :rules="rules">
           <el-row>
             <el-form-item label="环境">
               <el-select v-model="formData.env" placeholder="请选择">
@@ -54,14 +54,14 @@
                 <el-radio-button label="1">Token</el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="用户名" v-if="formData.authType == '0'">
+            <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
               <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
                 <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
                   <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-input>
             </el-form-item>
-            <el-form-item label="密码" v-if="formData.authType == '0'">
+            <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
               <el-input v-model="formData.password" style="width:220px;"></el-input>
             </el-form-item>
             <el-form-item label="Token" v-else>
@@ -78,7 +78,7 @@
           </el-row>
 
           <el-row>
-            <el-form-item label="请求URL">
+            <el-form-item label="请求路径" prop="queryPath">
               <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
                 <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
                   placeholder="请求方法">
@@ -104,7 +104,7 @@
             </el-form-item>
           </el-row>
           <el-form-item>
-            <el-button type="primary" @click="send">发送请求</el-button>
+            <el-button type="primary" @click="send('baseForm')">发送请求</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -128,6 +128,17 @@
     el: '#app',
     data() {
       return {
+        rules: {
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
+          ],
+          queryPath: [
+            { required: true, message: '请输入路径', trigger: 'blur' }
+          ]
+        },
         selectInfo: {
           env: ['dev', 'beta', 'gold'],
           service: ['auth2', 'chat', 'gateway', 'message', 'pay2', 'translate', 'auth', 'file-server', 'geoip', 'link', 'pay', 'ucenter'],
@@ -179,9 +190,15 @@
         }
         return data
       },
-      send() {
-        this.formData.clientId = this.formData.game + ':1.0.0'
-        this.getNameAddr(this.formData.env)
+      send(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.formData.clientId = this.formData.game + ':1.0.0'
+            this.getNameAddr(this.formData.env)
+          } else {
+            return false
+          }
+        })
       },
       // 获取name服务的地址
       getNameAddr(env) {
