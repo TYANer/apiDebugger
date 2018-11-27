@@ -65,7 +65,7 @@
               <el-input v-model="formData.password" style="width:220px;"></el-input>
             </el-form-item>
             <el-form-item label="Token" v-else>
-              <el-input v-model="formData.token"></el-input>
+              <el-input v-model="formData.token" style="width:640px;"></el-input>
             </el-form-item>
           </el-row>
 
@@ -134,22 +134,22 @@
           game: ['tgstest', 'ba', 'G301', 'g303', 'B001', 'c4'],
           userType: ['anonymous', 'tap4fun', 'system', 'game', 'facebook', 'twitter', 'weibo', 'googleplus', 'mobojoy', '360', 'uc', 'downjoy',
             'xiaomi', 'qq', 'weixin', 'ly', 'openweixin', 'openqq', 'baidu', 'vivo', 'huawei', 'oppo', '1sdk', 'gamecenter'],
-          queryMethod: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'],
-          scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'sauth', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
+          queryMethod: ['GET', 'POST', 'PUT', 'DELETE'],
+          scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
         },
         formData: {
-          env: 'dev',
-          service: 'pay2',
-          game: 'tgstest',
+          env: '',
+          service: '',
+          game: '',
           clientId: '',
           authType: '0',
-          userType: 'game',
-          username: 'tgstest-admin',
-          password: '4ECfyqRERWXkzUwMn6cg',
+          userType: '',
+          username: '',
+          password: '',
           token: '',
           authWay: 'auth',
           queryMethod: 'GET',
-          queryPath: '/buylist',
+          queryPath: '',
           params: [],
           scopeList: []
         },
