@@ -9,112 +9,126 @@
 </head>
 
 <body>
-  <div id="app">
+  <div id="app" class="container">
     <header>
-      <div class="container logo">logo</div>
+      <img src="favicon.ico" alt="tgs" style="margin: 6px 0 6px 60px;">
     </header>
 
-    <section class="container">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>配置信息</span>
-        </div>
-        <el-form :inline="true" label-position="top" :model="formData" label-width="100px" ref="baseForm" :rules="rules">
-          <el-row>
-            <el-form-item label="环境">
-              <el-select v-model="formData.env" placeholder="请选择">
-                <el-option v-for="item in selectInfo.env" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="服务">
-              <el-select v-model="formData.service" placeholder="请选择">
-                <el-option v-for="item in selectInfo.service" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="游戏">
-              <el-select v-model="formData.game" placeholder="请选择">
-                <el-option v-for="item in selectInfo.game" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="验证方法">
-              <el-radio-group v-model="formData.authWay">
-                <el-radio label="auth"></el-radio>
-                <el-radio label="auth2"></el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-row>
+    <div class="left">
+      <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">left
+      </el-scrollbar>
+    </div>
 
-          <el-row>
-            <el-form-item label="验证类型">
-              <el-radio-group v-model="formData.authType">
-                <el-radio-button label="0">用户名密码</el-radio-button>
-                <el-radio-button label="1">Token</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
-              <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
-                <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
-                  <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
-              <el-input v-model="formData.password" style="width:220px;"></el-input>
-            </el-form-item>
-            <el-form-item label="Token" v-else>
-              <el-input v-model="formData.token" style="width:640px;"></el-input>
-            </el-form-item>
-          </el-row>
+    <div class="main">
+      <section class="middle">
+        <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>配置信息</span>
+            </div>
+            <el-form :inline="true" label-position="top" :model="formData" label-width="100px" ref="baseForm" :rules="rules">
+              <el-row>
+                <el-form-item label="环境">
+                  <el-select v-model="formData.env" placeholder="请选择">
+                    <el-option v-for="item in selectInfo.env" :key="item" :label="item" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="服务">
+                  <el-select v-model="formData.service" placeholder="请选择">
+                    <el-option v-for="item in selectInfo.service" :key="item" :label="item" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="游戏">
+                  <el-select v-model="formData.game" placeholder="请选择">
+                    <el-option v-for="item in selectInfo.game" :key="item" :label="item" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="验证方法">
+                  <el-radio-group v-model="formData.authWay">
+                    <el-radio label="auth"></el-radio>
+                    <el-radio label="auth2"></el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-row>
 
-          <el-row>
-            <el-form-item label="Scope">
-              <el-checkbox-group v-model="formData.scopeList">
-                <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-row>
+              <el-row>
+                <el-form-item label="验证类型">
+                  <el-radio-group v-model="formData.authType">
+                    <el-radio-button label="0">用户名密码</el-radio-button>
+                    <el-radio-button label="1">Token</el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
+                  <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
+                    <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
+                      <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
+                  <el-input v-model="formData.password" style="width:220px;"></el-input>
+                </el-form-item>
+                <el-form-item label="Token" v-else>
+                  <el-input v-model="formData.token" style="width:640px;"></el-input>
+                </el-form-item>
+              </el-row>
 
-          <el-row>
-            <el-form-item label="请求路径" prop="queryPath">
-              <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
-                <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
-                  placeholder="请求方法">
-                  <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
-                <el-button slot="append" @click="addParams">添加参数</el-button>
-              </el-input>
-            </el-form-item>
-          </el-row>
-          <el-row v-for="(item,index) in formData.params">
-            <el-form-item>
-              <el-input placeholder="请输入内容" v-model="formData.params[index].key">
-                <template slot="prepend">key</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-input placeholder="请输入内容" v-model="formData.params[index].value">
-                <template slot="prepend">value</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button icon="el-icon-delete" plain type="danger" @click="removeParam(index)"></el-button>
-            </el-form-item>
-          </el-row>
-          <el-form-item>
-            <el-button type="primary" @click="send('baseForm')">发送请求</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>请求结果</span>
-        </div>
-        <pre><code id="response">暂无结果</code></pre>
-      </el-card>
-    </section>
+              <el-row>
+                <el-form-item label="Scope">
+                  <el-checkbox-group v-model="formData.scopeList">
+                    <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+              </el-row>
+
+              <el-row>
+                <el-form-item label="请求路径" prop="queryPath">
+                  <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
+                    <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
+                      placeholder="请求方法">
+                      <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                    <el-button slot="append" @click="addParams">添加参数</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-row>
+              <el-row v-for="(item,index) in formData.params">
+                <el-form-item>
+                  <el-input placeholder="请输入内容" v-model="formData.params[index].key">
+                    <template slot="prepend">key</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-input placeholder="请输入内容" v-model="formData.params[index].value">
+                    <template slot="prepend">value</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button icon="el-icon-delete" plain type="danger" @click="removeParam(index)"></el-button>
+                </el-form-item>
+              </el-row>
+              <el-form-item>
+                <el-button type="primary" @click="send('baseForm')">发送请求</el-button>
+              </el-form-item>
+            </el-form>
+          </el-card>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>请求结果</span>
+            </div>
+            <pre><code id="response">暂无结果</code></pre>
+          </el-card>
+        </el-scrollbar>
+      </section>
+
+      <div class="right">
+        <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">right
+        </el-scrollbar>
+      </div>
+    </div>
   </div>
 </body>
 <!-- import Vue before Element -->

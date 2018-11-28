@@ -4,23 +4,48 @@ body {
   padding: 0;
 }
 /* reset-end */
-body {
-  background: #f4f5f6;
+/* layout-start */
+.container {
+  position: relative;
+  height: 100vh;
 }
 header {
   height: 60px;
-  line-height: 60px;
-  background: #2a2a2a;
+  position: relative;
+  width: 100vw;
+  background: #fff;
 }
-.logo {
-  color: #fff;
-  font-size: 24px;
+.left {
+  padding: 0;
+  margin: 0;
+  width: 210px;
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
 }
-.container {
-  width: 960px;
-  margin-left: auto;
-  margin-right: auto;
-  zoom: 1;
+.main {
+  position: relative;
+  margin-left: 210px;
+  height: calc(100vh - 60px);
+}
+.middle,
+.right {
+  position: relative;
+  overflow: auto;
+  float: left;
+  height: 100%;
+}
+.middle {
+  width: calc(100% - 300px);
+}
+.right {
+  width: 300px;
+}
+/* layout-end */
+body {
+  background: #f4f5f6;
 }
 .clearfix:before,
 .clearfix:after {
@@ -33,7 +58,7 @@ header {
 .box-card {
   margin-top: 20px;
 }
-
+/* element-ui style overwrite-start */
 .el-card__header {
   background: #f4f5f6;
 }
@@ -65,3 +90,7 @@ button.el-button--primary:focus {
     background-color: #409EFF;
     border-color: #409EFF;
 }
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+/* element-ui style overwrite-end */
