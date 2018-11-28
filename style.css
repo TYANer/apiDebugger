@@ -27,10 +27,11 @@ header {
   left: 0;
   overflow: auto;
   height: calc(100vh - 60px);
+  background: #fff;
 }
 .main {
   position: relative;
-  margin-left: 315px;
+  margin-left: 300px;
   height: calc(100vh - 60px);
 }
 .middle,
@@ -42,15 +43,19 @@ header {
 }
 .middle {
   width: calc(100% - 315px);
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .right {
   width: 300px;
   margin-left: 15px;
 }
 /* layout-end */
-body {
+/* body {
   background: #f4f5f6;
-}
+} */
 .clearfix:before,
 .clearfix:after {
   display: table;

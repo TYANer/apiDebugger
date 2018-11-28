@@ -16,71 +16,73 @@
 
     <div class="left">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
-        <el-card class="box-card">
+        <!-- <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>配置信息</span>
-          </div>
-          <el-form :model="formData" ref="baseForm" :rules="rules">
-            <el-row>
-              <el-form-item label="环境">
-                <el-select v-model="formData.env" placeholder="请选择">
-                  <el-option v-for="item in selectInfo.env" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="服务">
-                <el-select v-model="formData.service" placeholder="请选择">
-                  <el-option v-for="item in selectInfo.service" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="游戏">
-                <el-select v-model="formData.game" placeholder="请选择">
-                  <el-option v-for="item in selectInfo.game" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="验证方法">
-                <el-radio-group v-model="formData.authWay">
-                  <el-radio label="auth"></el-radio>
-                  <el-radio label="auth2"></el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-row>
+          </div> -->
+        <el-alert title="以下内容均为必填项！" type="warning" close-text="知道了">
+        </el-alert>
+        <el-form :model="formData" ref="baseForm" :rules="rules" style="margin: 20px;">
+          <el-row>
+            <el-form-item label="环境">
+              <el-select v-model="formData.env" placeholder="请选择">
+                <el-option v-for="item in selectInfo.env" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="服务">
+              <el-select v-model="formData.service" placeholder="请选择">
+                <el-option v-for="item in selectInfo.service" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="游戏">
+              <el-select v-model="formData.game" placeholder="请选择">
+                <el-option v-for="item in selectInfo.game" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="验证方法">
+              <el-radio-group v-model="formData.authWay">
+                <el-radio label="auth"></el-radio>
+                <el-radio label="auth2"></el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-row>
 
-            <el-row>
-              <el-form-item label="验证类型">
-                <el-radio-group v-model="formData.authType">
-                  <el-radio-button label="0">账户密码</el-radio-button>
-                  <el-radio-button label="1">Token</el-radio-button>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
-                <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
-                  <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
-                    <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
-                  </el-select>
-                </el-input>
-              </el-form-item>
-              <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
-                <el-input v-model="formData.password" style="width:258px;"></el-input>
-              </el-form-item>
-              <el-form-item label="Token" v-else>
-                <el-input type="textarea" rows="6" v-model="formData.token" style="width:258px;height: 132px;"></el-input>
-              </el-form-item>
-            </el-row>
+          <el-row>
+            <el-form-item label="验证类型">
+              <el-radio-group v-model="formData.authType">
+                <el-radio-button label="0">账户密码</el-radio-button>
+                <el-radio-button label="1">Token</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
+              <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
+                <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
+                  <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
+              <el-input v-model="formData.password" style="width:258px;"></el-input>
+            </el-form-item>
+            <el-form-item label="Token" v-else>
+              <el-input type="textarea" rows="6" v-model="formData.token" style="width:258px;height: 132px;"></el-input>
+            </el-form-item>
+          </el-row>
 
-            <el-row>
-              <!-- <el-form-item label="Scope"> -->
-              <!-- <el-checkbox-group v-model="formData.scopeList">
+          <el-row>
+            <!-- <el-form-item label="Scope"> -->
+            <!-- <el-checkbox-group v-model="formData.scopeList">
                   <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
                 </el-checkbox-group> -->
-              <label for="scopetree" class="label">Scope</label>
-              <el-tree id="scopetree" :props="defaultProps" :data="selectInfo.scope" show-checkbox node-key="label" ref="tree">
-                <!-- </el-form-item> -->
-            </el-row>
-          </el-form>
-        </el-card>
+            <label for="scopetree" class="label">Scope</label>
+            <el-tree id="scopetree" :props="defaultProps" :data="selectInfo.scope" show-checkbox node-key="label" ref="tree">
+              <!-- </el-form-item> -->
+          </el-row>
+        </el-form>
+        <!-- </el-card> -->
       </el-scrollbar>
     </div>
 
@@ -88,7 +90,8 @@
       <section class="middle">
         <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
 
-          <section style="margin-top: 20px;">
+          <section>
+            <el-row style="display: flex;">
             <!-- <el-form-item label="请求路径" prop="queryPath"> -->
             <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
               <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
@@ -96,26 +99,26 @@
                 <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-input>
-            <el-button type="primary" @click="send('baseForm')">发送请求</el-button>
+            <el-button type="primary" @click="send('baseForm')" style="margin-left: 20px;">发送请求</el-button>
             <!-- </el-form-item> -->
-
-          <el-table :data="formData.params" style="width: 100%" size="small">
-            <el-table-column label="Key">
-              <template slot-scope="scope">
-                <el-input type="text" v-model="scope.row.key" class="edit-input" size="small" @change="isBlank"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="Value">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.value" class="edit-input" size="small" @change="isBlank"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="Delete" width="80px;">
-              <template slot-scope="scope" v-if="scope.$index != (formData.params.length - 1)">
-                <el-button icon="el-icon-delete" size="small" plain type="danger" @click="removeParam(scope.$index)"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+</el-row>
+            <el-table :data="formData.params" style="width: 100%" size="small">
+              <el-table-column label="Key">
+                <template slot-scope="scope">
+                  <el-input type="text" v-model="scope.row.key" class="edit-input" size="small" @change="isBlank" />
+                </template>
+              </el-table-column>
+              <el-table-column label="Value">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.value" class="edit-input" size="small" @change="isBlank" />
+                </template>
+              </el-table-column>
+              <el-table-column label="Delete" width="80px;">
+                <template slot-scope="scope" v-if="scope.$index != (formData.params.length - 1)">
+                  <el-button icon="el-icon-delete" size="small" plain type="danger" @click="removeParam(scope.$index)"></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </section>
 
           <!-- <el-row v-for="(item,index) in formData.params">
@@ -246,14 +249,14 @@
           // scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
         },
         formData: {
-          env: '',
-          service: '',
-          game: '',
+          env: 'dev',
+          service: 'pay2',
+          game: 'tgstest',
           clientId: '',
           authType: '0',
-          userType: '',
-          username: '',
-          password: '',
+          userType: 'game',
+          username: 'tgstest-admin',
+          password: '4ECfyqRERWXkzUwMn6cg',
           token: '',
           authWay: 'auth',
           queryMethod: 'GET',
@@ -272,14 +275,14 @@
       // 获取scope
       getScopes() {
         let arr = this.$refs.tree.getCheckedKeys(true)
-        this.scopeList = new Set(arr)
+        this.formData.scopeList = Array.from(new Set(arr))
       },
       // 添加参数
       addParams() {
         this.formData.params.push({})
       },
-      isBlank () {
-        let l = this.formData.params.length -1
+      isBlank() {
+        let l = this.formData.params.length - 1
         if (this.formData.params[l].key || this.formData.params[l].value) {
           this.addParams()
         }
