@@ -14,20 +14,23 @@ header {
   position: relative;
   width: 100vw;
   background: #fff;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
 }
 .left {
   padding: 0;
   margin: 0;
-  width: 210px;
+  width: 300px;
   position: absolute;
   top: 60px;
   bottom: 0;
   left: 0;
   overflow: auto;
+  height: calc(100vh - 60px);
 }
 .main {
   position: relative;
-  margin-left: 210px;
+  margin-left: 315px;
   height: calc(100vh - 60px);
 }
 .middle,
@@ -38,10 +41,11 @@ header {
   height: 100%;
 }
 .middle {
-  width: calc(100% - 300px);
+  width: calc(100% - 315px);
 }
 .right {
   width: 300px;
+  margin-left: 15px;
 }
 /* layout-end */
 body {
@@ -55,8 +59,16 @@ body {
 .clearfix:after {
   clear: both
 }
-.box-card {
+/* .box-card {
   margin-top: 20px;
+} */
+.label {
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 /* element-ui style overwrite-start */
 .el-card__header {
@@ -71,9 +83,9 @@ body {
 .el-form-item {
   margin-bottom: 10px;
 }
-.el-input-group>.el-input__inner {
+/* .el-input-group>.el-input__inner {
   width: 274px;
-}
+} */
 .el-checkbox+.el-checkbox {
   margin-left: 0;
 }
