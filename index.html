@@ -6,6 +6,7 @@
   <!-- import CSS -->
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="highlight/styles/monokai-sublime.css">
 </head>
 
 <body>
@@ -92,16 +93,16 @@
 
           <section>
             <el-row style="display: flex;">
-            <!-- <el-form-item label="请求路径" prop="queryPath"> -->
-            <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
-              <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
-                placeholder="请求方法">
-                <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-            </el-input>
-            <el-button type="primary" @click="send('baseForm')" style="margin-left: 20px;">发送请求</el-button>
-            <!-- </el-form-item> -->
-</el-row>
+              <!-- <el-form-item label="请求路径" prop="queryPath"> -->
+              <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
+                <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
+                  placeholder="请求方法">
+                  <el-option v-for="item in selectInfo.queryMethod" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-input>
+              <el-button type="primary" @click="send('baseForm')" style="margin-left: 20px;">发送请求</el-button>
+              <!-- </el-form-item> -->
+            </el-row>
             <el-table :data="formData.params" style="width: 100%" size="small">
               <el-table-column label="Key">
                 <template slot-scope="scope">
@@ -142,7 +143,7 @@
             <div slot="header" class="clearfix">
               <span>请求结果</span>
             </div>
-            <pre><code id="response">暂无结果</code></pre>
+            <pre><code id="response" class="json">暂无结果</code></pre>
           </el-card>
         </el-scrollbar>
       </section>
@@ -158,6 +159,8 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <!-- import Axios -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
@@ -388,7 +391,9 @@
           params: data, //请求参数
           responseType: "json"
         }).then((res) => {
-          document.getElementById("response").textContent = JSON.stringify(res, null, 2);
+          let code = document.getElementById("response")
+          code.innerHTML = JSON.stringify(res, null, 2)
+          hljs.highlightBlock(code);
         })
       }
     }
