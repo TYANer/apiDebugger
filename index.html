@@ -23,7 +23,7 @@
           </div> -->
         <el-alert title="以下内容均为必填项！" type="warning" close-text="知道了">
         </el-alert>
-        <el-form :model="formData" ref="baseForm" :rules="rules" style="margin: 20px;">
+        <el-form :model="formData" ref="baseForm" style="margin: 20px;">
           <el-row>
             <el-form-item label="环境">
               <el-select v-model="formData.env" placeholder="请选择">
@@ -79,7 +79,8 @@
                   <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
                 </el-checkbox-group> -->
             <label for="scopetree" class="label">Scope</label>
-            <el-tree id="scopetree" :props="defaultProps" :data="selectInfo.scope" :default-checked-keys="checkedKeys" show-checkbox node-key="label" ref="tree">
+            <el-tree id="scopetree" :props="defaultProps" :data="selectInfo.scope" :default-checked-keys="checkedKeys"
+              show-checkbox node-key="label" ref="tree">
               <!-- </el-form-item> -->
           </el-row>
         </el-form>
@@ -148,7 +149,7 @@
                 <span class="label">请求时间：</span>
                 <el-tag type="info">{{requestTime}}</el-tag>
                 <span class="label">状态码：</span>
-                <el-tag type="info">{{statusCode}}</el-tag>
+                <el-tag :type="getStatus(statusCode)">{{statusCode}}</el-tag>
                 <pre><code id="response" class="json">暂无结果</code></pre>
               </el-tab-pane>
               <el-tab-pane label="Headers" name="second">
@@ -162,7 +163,6 @@
       <div class="right">
         <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
           <el-table :data="historyList" style="width: 100%">
-            <!-- <el-table-column prop="queryUrl" label="历史记录" @click.native="showHistory"></el-table-column> -->
             <el-table-column label="历史记录">
               <template slot-scope="scope">
                 <p @click="showHistory(scope.row)">{{scope.row.queryUrl}}</p>
@@ -188,21 +188,34 @@
 <!-- import Axios -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+const statusMap = new Map([
+  [0, 'info'],
+  [1, 'info'],
+  [2, 'success'],
+  [3, 'warning'],
+  [4, 'error'],
+  [5, 'error'],
+])
   new Vue({
     el: '#app',
     data() {
+      // var checkifblank = (rule, value, callback) => {
+      //   if (!value) {
+      //     this.$message.error('错了哦，这是一条错误消息')
+      //   }
+      // }
       return {
-        rules: {
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
-          ],
-          queryPath: [
-            { required: true, message: '请输入路径', trigger: 'blur' }
-          ]
-        },
+        // rules: {
+        //   password: [
+        //     { validator: checkifblank, trigger: 'blur' }
+        //   ],
+        //   username: [
+        //     { validator: checkifblank, trigger: 'blur' }
+        //   ],
+        //   queryPath: [
+        //     { validator: checkifblank, message: '请输入路径', trigger: 'blur' }
+        //   ]
+        // },
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -228,18 +241,18 @@
           }, {
             label: '游戏服务账号特有权限',
             children: [{
-            //   label: 'auth'
-            // }, {
-            //   label: 'ads'
-            // }, {
+              //   label: 'auth'
+              // }, {
+              //   label: 'ads'
+              // }, {
               label: 'auth_game_admin'
             }, {
               label: 'ads_rw'
             }, {
-            //   label: 'pay'
-            // }, {
-            //   label: 'message'
-            // }, {
+              //   label: 'pay'
+              // }, {
+              //   label: 'message'
+              // }, {
               label: 'message_admin'
             }, {
               label: 'chat_admin'
@@ -255,14 +268,14 @@
           }, {
             label: '玩家账号特有权限',
             children: [{
-            //   label: 'auth'
-            // }, {
-            //   label: 'ads'
-            // }, {
-            //   label: 'pay'
-            // }, {
-            //   label: 'message'
-            // }, {
+              //   label: 'auth'
+              // }, {
+              //   label: 'ads'
+              // }, {
+              //   label: 'pay'
+              // }, {
+              //   label: 'message'
+              // }, {
               label: 'chat'
             }]
           }, {
@@ -316,20 +329,24 @@
       }
     },
     mounted() {
+      let emptyParams = [{ key: '', value: '' }]
       // 读取缓存数据
       this.formData.env = localStorage.getItem('env')
       this.formData.service = localStorage.getItem('service')
       this.formData.game = localStorage.getItem('game')
-      this.formData.authType = localStorage.getItem('authType')
+      this.formData.authType = localStorage.getItem('authType') || '0'
       this.formData.userType = localStorage.getItem('userType')
       this.formData.username = localStorage.getItem('username')
       this.formData.password = localStorage.getItem('password')
       this.formData.token = localStorage.getItem('token')
-      this.formData.authWay = localStorage.getItem('authWay')
-      this.formData.queryMethod = localStorage.getItem('queryMethod')
+      this.formData.authWay = localStorage.getItem('authWay') || 'auth'
+      this.formData.queryMethod = localStorage.getItem('queryMethod') || 'GET'
       this.formData.queryPath = localStorage.getItem('queryPath')
-      this.formData.params = JSON.parse(localStorage.getItem('params'))
-      this.checkedKeys = localStorage.getItem('scopeList').split(",")
+      this.formData.params = JSON.parse(localStorage.getItem('params')) || emptyParams
+      this.checkedKeys = localStorage.getItem('scopeList') || []
+      if (typeof (this.checkedKeys) == 'string') {
+        this.checkedKeys = this.checkedKeys.split(',')
+      }
       let h = JSON.parse(localStorage.getItem('historyList'))
       this.historyList = (h == '') ? [] : h
     },
@@ -387,17 +404,32 @@
         return data
       },
       send(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+        let groupOne,groupTwo
+        groupOne = this.formData.env && this.formData.service && this.formData.game
+        if (this.formData.authType == '0') {
+          groupTwo = this.formData.userType && this.formData.username && this.formData.password
+        } else {
+          groupTwo = this.formData.token
+        }
+        if (groupOne && groupTwo) {
+          let pattern = /^\//i
+          if (pattern.test(this.formData.queryPath)) {
+        // }
+        // this.$refs[formName].validate((valid) => {
+        //   if (valid) {
             this.formData.clientId = this.formData.game + ':1.0.0'
             var myDate = new Date();
             this.requestTime = myDate.toLocaleString()
             this.getScopes()
             this.getNameAddr(this.formData.env)
           } else {
-            return false
+            this.$message.error('请求路径格式错误！')
           }
-        })
+        } else {
+          this.$message.error('必填项没有填写完整！')
+          // return false
+        }
+        // })
       },
       // 获取name服务的地址
       getNameAddr(env) {
@@ -483,13 +515,36 @@
           hljs.highlightBlock(headers);
         })
       },
-      getQueryUrl (baseUrl) {
+      // 获取状态码样式
+      getStatus (statuscode) {
+        switch(Math.floor(statuscode/100)) {
+          case 1:
+            code = 1
+            break;
+          case 2:
+            code = 2
+            break;
+          case 3:
+            code = 3
+            break;
+          case 4:
+            code = 4
+            break;
+          case 5:
+            code = 5
+            break;
+          default:
+            code = 0
+        }
+        return statusMap.get(code)
+      },
+      getQueryUrl(baseUrl) {
         let queryParam = '?'
         let l = this.formData.params.length
-        let i =0, j = 0
-        for(i; i < l-1; i++ ) {
+        let i = 0, j = 0
+        for (i; i < l - 1; i++) {
           queryParam += this.formData.params[i].key + '=' + this.formData.params[i].value
-          for (j; j< l-2; j++) {
+          for (j; j < l - 2; j++) {
             queryParam += '&'
           }
         }
@@ -498,7 +553,7 @@
       handleClick(tab, event) {
         console.log(tab, event);
       },
-      setHistory () {
+      setHistory() {
         let history = {}
         history.formData = JSON.parse(JSON.stringify(this.formData))
         history.queryUrl = this.queryUrl
