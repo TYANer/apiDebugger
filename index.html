@@ -325,7 +325,8 @@ const statusMap = new Map([
         activeName: 'first',
         checkedKeys: [],
         historyList: [],
-        queryUrl: ''
+        queryUrl: '',
+        result: ''
       }
     },
     mounted() {
@@ -469,7 +470,8 @@ const statusMap = new Map([
           let serviceData = that.getParams()
           serviceData.access_token = that.accessToken
           // 发送api请求
-          that.checkAPI(serviceUrl, serviceData)
+          await that.checkAPI(serviceUrl, serviceData)
+          that.setHistory()
         })
       },
       // 获取具体服务的地址
@@ -497,23 +499,27 @@ const statusMap = new Map([
         })
       },
       // 调试api
-      checkAPI(baseUrl, data) {
+      async checkAPI(baseUrl, data) {
         this.getQueryUrl(baseUrl)
-        this.setHistory()
-        axios({
+        await axios({
           url: baseUrl + this.formData.queryPath, //请求地址
           method: 'GET',   //请求方式
           params: data, //请求参数
           responseType: "json"
         }).then((res) => {
-          this.statusCode = res.status
-          let code = document.getElementById("response")
-          code.innerHTML = JSON.stringify(res.data, null, 2)
-          let headers = document.getElementById("headers")
-          headers.innerHTML = JSON.stringify(res, null, 2)
-          hljs.highlightBlock(code);
-          hljs.highlightBlock(headers);
+          this.result = res
+          this.showResult(res)
         })
+      },
+      // 展示结果
+      showResult (res) {
+        this.statusCode = res.status
+        let code = document.getElementById("response")
+        code.innerHTML = JSON.stringify(res.data, null, 2)
+        let headers = document.getElementById("headers")
+        headers.innerHTML = JSON.stringify(res, null, 2)
+        hljs.highlightBlock(code);
+        hljs.highlightBlock(headers);
       },
       // 获取状态码样式
       getStatus (statuscode) {
@@ -556,6 +562,8 @@ const statusMap = new Map([
       setHistory() {
         let history = {}
         history.formData = JSON.parse(JSON.stringify(this.formData))
+        history.result = this.result
+        history.requestTime = this.requestTime
         history.queryUrl = this.queryUrl
         this.historyList.unshift(history)
       },
@@ -577,6 +585,8 @@ const statusMap = new Map([
         this.formData.queryPath = row.formData.queryPath
         this.formData.params = row.formData.params
         this.$refs.tree.setCheckedKeys(row.formData.scopeList.split(","))
+        this.showResult(row.result)
+        this.requestTime = row.requestTime
       }
     }
   })
