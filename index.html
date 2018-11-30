@@ -91,7 +91,7 @@
       <section class="middle">
         <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
 
-          <section>
+          <section style="padding: 20px;">
             <el-row style="display: flex;">
               <!-- <el-form-item label="请求路径" prop="queryPath"> -->
               <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
@@ -139,7 +139,7 @@
           </el-row>
           <el-form-item>
           </el-form-item> -->
-          <el-card class="box-card">
+          <el-card class="box-card" style="margin:0 20px 20px 20px;">
             <div slot="header" class="clearfix">
               <span>请求结果</span>
             </div>
@@ -160,7 +160,10 @@
       </section>
 
       <div class="right">
-        <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">right
+        <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
+          <el-table :data="historyList" style="width: 100%" @row-click="showHistory">
+            <el-table-column prop="queryUrl" label="历史记录"></el-table-column>
+          </el-table>
         </el-scrollbar>
       </div>
     </div>
@@ -297,7 +300,9 @@
         requestTime: '未请求',
         statusCode: '-',
         activeName: 'first',
-        checkedKeys: []
+        checkedKeys: [],
+        historyList: [],
+        queryUrl: ''
       }
     },
     mounted() {
@@ -309,13 +314,14 @@
       this.formData.userType = localStorage.getItem('userType')
       this.formData.username = localStorage.getItem('username')
       this.formData.password = localStorage.getItem('password')
-      this.formData.password = localStorage.getItem('password')
       this.formData.token = localStorage.getItem('token')
       this.formData.authWay = localStorage.getItem('authWay')
       this.formData.queryMethod = localStorage.getItem('queryMethod')
       this.formData.queryPath = localStorage.getItem('queryPath')
       this.formData.params = JSON.parse(localStorage.getItem('params'))
       this.checkedKeys = localStorage.getItem('scopeList').split(",")
+      let h = JSON.parse(localStorage.getItem('historyList'))
+      this.historyList = (h == '') ? [] : h
     },
     created() {
       // 页面卸载之前存储信息
@@ -334,6 +340,7 @@
         this.getScopes()
         localStorage.setItem('params', JSON.stringify(this.formData.params))
         localStorage.setItem('scopeList', this.formData.scopeList)
+        localStorage.setItem('historyList', JSON.stringify(this.historyList))
       }
     },
     methods: {
@@ -449,6 +456,8 @@
       },
       // 调试api
       checkAPI(baseUrl, data) {
+        this.getQueryUrl(baseUrl)
+        this.setHistory()
         axios({
           url: baseUrl + this.formData.queryPath, //请求地址
           method: 'GET',   //请求方式
@@ -457,12 +466,48 @@
         }).then((res) => {
           this.statusCode = res.status
           let code = document.getElementById("response")
-          code.innerHTML = JSON.stringify(res, null, 2)
+          code.innerHTML = JSON.stringify(res.data, null, 2)
+          let headers = document.getElementById("headers")
+          headers.innerHTML = JSON.stringify(res, null, 2)
           hljs.highlightBlock(code);
+          hljs.highlightBlock(headers);
         })
+      },
+      getQueryUrl (baseUrl) {
+        let queryParam = '?'
+        let l = this.formData.params.length
+        let i =0, j = 0
+        for(i; i < l-1; i++ ) {
+          queryParam += this.formData.params[i].key + '=' + this.formData.params[i].value
+          for (j; j< l-2; j++) {
+            queryParam += '&'
+          }
+        }
+        this.queryUrl = baseUrl + this.formData.queryPath + queryParam
       },
       handleClick(tab, event) {
         console.log(tab, event);
+      },
+      setHistory () {
+        let history = {}
+        history.formData = JSON.parse(JSON.stringify(this.formData))
+        history.queryUrl = this.queryUrl
+        this.historyList.unshift(history)
+      },
+      showHistory(row) {
+        this.formData.env = row.formData.env
+        this.formData.service = row.formData.service
+        this.formData.game = row.formData.game
+        this.formData.authType = row.formData.authType
+        this.formData.userType = row.formData.userType
+        this.formData.username = row.formData.username
+        this.formData.password = row.formData.password
+        this.formData.token = row.formData.token
+        this.formData.authWay = row.formData.authWay
+        this.formData.queryMethod = row.formData.queryMethod
+        this.formData.queryPath = row.formData.queryPath
+        this.formData.params = row.formData.params
+        this.$refs.tree.setCheckedKeys(row.formData.scopeList.split(","))
       }
     }
   })
