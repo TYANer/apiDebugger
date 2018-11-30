@@ -1,5 +1,5 @@
 /* reset-start */
-body {
+body,p {
   margin: 0;
   padding: 0;
 }
