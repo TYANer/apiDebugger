@@ -163,7 +163,7 @@
         </el-scrollbar>
       </section>
 
-      <div class="right">
+      <div class="right" style="height: 100%;">
         <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
           <el-table :data="historyList" style="width: 100%">
             <el-table-column label="历史记录">
@@ -322,8 +322,6 @@
             }, {
               label: 'chat'
             }, {
-              label: 'auth2'
-            }, {
               label: 'ads_rw'
             }]
           }, {
@@ -477,14 +475,17 @@
         if (checkAuth) {
           let pattern = /^\//i
           if (pattern.test(this.formData.queryPath)) {
+            let loading = this.$loading({ text: '正在请求...' })
             // }
             // this.$refs[formName].validate((valid) => {
             //   if (valid) {
             this.formData.clientId = this.formData.game + ':1.0.0'
             var myDate = new Date();
             this.requestTime = myDate.toLocaleString()
+            this.statusCode = '-'
             this.getScopes()
             this.getNameAddr(this.formData.env)
+            loading.close()
           } else {
             this.$message.error('请求路径格式错误！')
           }
@@ -511,6 +512,13 @@
           },
           responseType: 'json'
         }).then(async function (res) {
+          if (res.data.error_msg) {
+            that.$notify.error({
+              title: '错误',
+              message: res.data.error_msg
+            });
+            return
+          }
           that.nameUrl = res.data.cfn.servers.name
           let authdata = { client_id: that.formData.clientId };
           let apiData = { client_id: that.formData.clientId, service: that.formData.service };
@@ -518,17 +526,26 @@
           if (that.formData.authType == "0") {
             authdata.service = that.formData.authWay
             let authUrl = await that.getServiceAddr('GET', authdata)
+            if (authUrl === false) {
+              return
+            }
             let authorizeData = {}
             authorizeData.client_id = that.formData.clientId
             authorizeData.user = that.formData.userType + ':' + that.formData.username
             authorizeData.password = that.formData.password
             authorizeData.scope = that.formData.scopeList
-            await that.authorize(authUrl, authorizeData)
+            let authorizeResult = await that.authorize(authUrl, authorizeData)
+            if (authorizeResult === false) {
+              return
+            }
           } else {
             that.accessToken = that.formData.token
           }
           // 调用获取服务的方法
           serviceUrl = await that.getServiceAddr(that.formData.queryMethod, apiData)
+          if (serviceUrl === false) {
+            return
+          }
           let serviceData = that.getParams()
           serviceData.access_token = that.accessToken
           // 发送api请求
@@ -545,18 +562,33 @@
           params: data,
           responseType: "json"
         }).then((res) => {
+          if (res.data.error_msg) {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.error_msg
+            });
+            return false
+          }
           url = res.data.schema + "://" + res.data.host + ":" + res.data.https_port + res.data.path
         })
         return url
       },
       // 获取access_token
       async authorize(baseUrl, data) {
+        let that = this
         await axios({
           url: baseUrl + "/authorize", //请求地址
           method: 'GET',   //请求方式
           params: data, //请求参数
           responseType: "json"
         }).then((res) => {
+          if (res.data.error_msg) {
+            that.$notify.error({
+              title: '错误',
+              message: res.data.error_msg
+            });
+            return false
+          }
           this.accessToken = res.data.access_token
         })
       },
