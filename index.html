@@ -7,12 +7,13 @@
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="highlight/styles/monokai-sublime.css">
+  <link rel="stylesheet" href="http://at.alicdn.com/t/font_944508_abldysdt1e8.css">
 </head>
 
 <body>
   <div id="app" class="container">
     <header>
-      <img src="favicon.ico" alt="tgs" style="margin: 6px 0 6px 60px;">
+      <h1 class="page-title">Tap4fun Game Service 接口调试工具</h1>
     </header>
 
     <div class="left">
@@ -21,9 +22,7 @@
           <div slot="header" class="clearfix">
             <span>配置信息</span>
           </div> -->
-        <el-alert title="以下内容均为必填项！" type="warning" close-text="知道了">
-        </el-alert>
-        <el-form :model="formData" ref="baseForm" style="margin: 20px;">
+        <el-form :model="formData" style="margin: 15px;">
           <el-row>
             <el-form-item label="环境">
               <el-select v-model="formData.env" placeholder="请选择">
@@ -58,18 +57,22 @@
                 <el-radio-button label="1">Token</el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="用户名" v-if="formData.authType == '0'" prop="username">
+            <el-form-item v-if="formData.authType == '0'" prop="username">
               <el-input placeholder="请输入用户名" v-model="formData.username" class="input-with-select">
-                <el-select style="width: 130px;" v-model="formData.userType" slot="prepend" placeholder="用户类型">
-                  <el-option v-for="item in selectInfo.userType" :key="item" :label="item" :value="item"></el-option>
+                <i class="iconfont icon-yonghu" style="margin: 0 14px 0 -16px;color:#c0c4cc;" slot="prepend"></i>
+                <el-select style="width: 124px;" filterable v-model="formData.userType" slot="prepend" placeholder="用户类型">
+                  <el-option-group v-for="group in selectInfo.userType" :key="group.label" :label="group.label">
+                    <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-option-group>
                 </el-select>
               </el-input>
             </el-form-item>
-            <el-form-item label="密码" v-if="formData.authType == '0'" prop="password">
-              <el-input v-model="formData.password" style="width:258px;"></el-input>
+            <el-form-item v-if="formData.authType == '0'" prop="password">
+              <el-input v-model="formData.password" prefix-icon="iconfont icon-icon2" style="width:270px;"></el-input>
             </el-form-item>
-            <el-form-item label="Token" v-else>
-              <el-input type="textarea" rows="6" v-model="formData.token" style="width:258px;height: 132px;"></el-input>
+            <el-form-item v-else>
+              <el-input type="textarea" rows="4" v-model="formData.token" style="width:270px;height: 92px;"></el-input>
             </el-form-item>
           </el-row>
 
@@ -105,19 +108,19 @@
               <!-- </el-form-item> -->
             </el-row>
             <el-table :data="formData.params" style="width: 100%" size="small">
-              <el-table-column label="Key">
+              <el-table-column label="Key" min-width="120px">
                 <template slot-scope="scope">
                   <el-input type="text" v-model="scope.row.key" class="edit-input" size="small" @change="isBlank" />
                 </template>
               </el-table-column>
-              <el-table-column label="Value">
+              <el-table-column label="Value" min-width="180px">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.value" class="edit-input" size="small" @change="isBlank" />
                 </template>
               </el-table-column>
-              <el-table-column width="80px;">
+              <el-table-column width="40px;">
                 <template slot-scope="scope" v-if="scope.$index != (formData.params.length - 1)">
-                  <el-button icon="el-icon-delete" size="small" plain type="danger" @click="removeParam(scope.$index)"></el-button>
+                  <el-button class="del" icon="el-icon-delete" type="text" @click="removeParam(scope.$index)"></el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -170,7 +173,7 @@
             </el-table-column>
             <el-table-column width="40px;">
               <template slot-scope="scope">
-                <el-button icon="el-icon-delete" type="text" @click="removeHistory(scope.$index)"></el-button>
+                <el-button class="del" icon="el-icon-delete" type="text" @click="removeHistory(scope.$index)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -188,14 +191,14 @@
 <!-- import Axios -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-const statusMap = new Map([
-  [0, 'info'],
-  [1, 'info'],
-  [2, 'success'],
-  [3, 'warning'],
-  [4, 'error'],
-  [5, 'error'],
-])
+  const statusMap = new Map([
+    [0, 'info'],
+    [1, 'info'],
+    [2, 'success'],
+    [3, 'warning'],
+    [4, 'error'],
+    [5, 'error'],
+  ])
   new Vue({
     el: '#app',
     data() {
@@ -224,8 +227,87 @@ const statusMap = new Map([
           env: ['dev', 'beta', 'gold'],
           service: ['auth2', 'chat', 'gateway', 'message', 'pay2', 'translate', 'auth', 'file-server', 'geoip', 'link', 'pay', 'ucenter'],
           game: ['tgstest', 'ba', 'G301', 'g303', 'B001', 'c4'],
-          userType: ['anonymous', 'tap4fun', 'system', 'game', 'facebook', 'twitter', 'weibo', 'googleplus', 'mobojoy', '360', 'uc', 'downjoy',
-            'xiaomi', 'qq', 'weixin', 'ly', 'openweixin', 'openqq', 'baidu', 'vivo', 'huawei', 'oppo', '1sdk', 'gamecenter'],
+          // userType: ['facebook', 'twitter', 'weibo', 'googleplus', 'mobojoy', '360', 'uc', 'downjoy',
+          //   'xiaomi', 'qq', 'weixin', 'ly', 'openweixin', 'openqq', 'baidu', 'vivo', 'huawei', 'oppo', '1sdk', 'gamecenter'],
+          userType: [{
+            label: '服务账号',
+            options: [{
+              value: 'game',
+              label: 'game'
+            }, {
+              value: 'system',
+              label: 'system'
+            }]
+          }, {
+            label: '玩家账号',
+            options: [{
+              value: 'anonymous',
+              label: 'anonymous'
+            }, {
+              value: 'tap4fun',
+              label: 'tap4fun'
+            }, {
+              value: 'baidu',
+              label: 'baidu'
+            }, {
+              value: 'downjoy',
+              label: 'downjoy'
+            }, {
+              value: 'facebook',
+              label: 'facebook'
+            }, {
+              value: 'gamecenter',
+              label: 'gamecenter'
+            }, {
+              value: 'googleplus',
+              label: 'googleplus'
+            }, {
+              value: 'huawei',
+              label: 'huawei'
+            }, {
+              value: 'ly',
+              label: 'ly'
+            }, {
+              value: 'mobojoy',
+              label: 'mobojoy'
+            }, {
+              value: 'openweixin',
+              label: 'openweixin'
+            }, {
+              value: 'openqq',
+              label: 'openqq'
+            }, {
+              value: 'oppo',
+              label: 'oppo'
+            }, {
+              value: 'qq',
+              label: 'qq'
+            }, {
+              value: 'twitter',
+              label: 'twitter'
+            }, {
+              value: 'uc',
+              label: 'uc'
+            }, {
+              value: 'vivo',
+              label: 'vivo'
+            }, {
+              value: 'weibo',
+              label: 'weibo'
+            }, {
+              value: 'weixin',
+              label: 'weixin'
+            }, {
+              value: 'xiaomi',
+              label: 'xiaomi'
+            }, {
+              value: '1sdk',
+              label: '1sdk'
+            }, {
+              value: '360',
+              label: '360'
+            }]
+          }],
           queryMethod: ['GET', 'POST', 'PUT', 'DELETE'],
           scope: [{
             label: '基础权限',
@@ -237,27 +319,23 @@ const statusMap = new Map([
               label: 'pay'
             }, {
               label: 'message'
-            }]
-          }, {
-            label: '游戏服务账号特有权限',
-            children: [{
-              //   label: 'auth'
-              // }, {
-              //   label: 'ads'
-              // }, {
-              label: 'auth_game_admin'
+            }, {
+              label: 'chat'
+            }, {
+              label: 'auth2'
             }, {
               label: 'ads_rw'
+            }]
+          }, {
+            label: '管理权限',
+            children: [{
+              label: 'auth_game_admin'
             }, {
-              //   label: 'pay'
-              // }, {
-              //   label: 'message'
-              // }, {
               label: 'message_admin'
             }, {
               label: 'chat_admin'
             }, {
-              label: 'chat_system'
+              label: 'mail_admin'
             }, {
               label: 'link_admin'
             }, {
@@ -266,24 +344,9 @@ const statusMap = new Map([
               label: 'gateway_game_admin'
             }]
           }, {
-            label: '玩家账号特有权限',
+            label: '系统权限',
             children: [{
-              //   label: 'auth'
-              // }, {
-              //   label: 'ads'
-              // }, {
-              //   label: 'pay'
-              // }, {
-              //   label: 'message'
-              // }, {
-              label: 'chat'
-            }]
-          }, {
-            label: '其他权限',
-            children: [{
-              label: 'mail_admin'
-            }, {
-              label: 'auth2'
+              label: 'chat_system'
             }, {
               label: 'system'
             }, {
@@ -349,7 +412,7 @@ const statusMap = new Map([
         this.checkedKeys = this.checkedKeys.split(',')
       }
       let h = JSON.parse(localStorage.getItem('historyList'))
-      this.historyList = (h == '' || h == null ) ? [] : h
+      this.historyList = (h == '' || h == null) ? [] : h
     },
     created() {
       // 页面卸载之前存储信息
@@ -405,19 +468,18 @@ const statusMap = new Map([
         return data
       },
       send(formName) {
-        let groupOne,groupTwo
-        groupOne = this.formData.env && this.formData.service && this.formData.game
+        let checkAuth
         if (this.formData.authType == '0') {
-          groupTwo = this.formData.userType && this.formData.username && this.formData.password
+          checkAuth = this.formData.userType && this.formData.username && this.formData.password
         } else {
-          groupTwo = this.formData.token
+          checkAuth = this.formData.token
         }
-        if (groupOne && groupTwo) {
+        if (checkAuth) {
           let pattern = /^\//i
           if (pattern.test(this.formData.queryPath)) {
-        // }
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
+            // }
+            // this.$refs[formName].validate((valid) => {
+            //   if (valid) {
             this.formData.clientId = this.formData.game + ':1.0.0'
             var myDate = new Date();
             this.requestTime = myDate.toLocaleString()
@@ -427,7 +489,7 @@ const statusMap = new Map([
             this.$message.error('请求路径格式错误！')
           }
         } else {
-          this.$message.error('必填项没有填写完整！')
+          this.$message.error('验证信息没有填写完整！')
           // return false
         }
         // })
@@ -512,7 +574,7 @@ const statusMap = new Map([
         })
       },
       // 展示结果
-      showResult (res) {
+      showResult(res) {
         this.statusCode = res.status
         let code = document.getElementById("response")
         code.innerHTML = JSON.stringify(res.data, null, 2)
@@ -522,8 +584,8 @@ const statusMap = new Map([
         hljs.highlightBlock(headers);
       },
       // 获取状态码样式
-      getStatus (statuscode) {
-        switch(Math.floor(statuscode/100)) {
+      getStatus(statuscode) {
+        switch (Math.floor(statuscode / 100)) {
           case 1:
             code = 1
             break;
@@ -547,13 +609,12 @@ const statusMap = new Map([
       getQueryUrl(baseUrl) {
         let queryParam = '?'
         let l = this.formData.params.length
-        let i = 0, j = 0
-        for (i; i < l - 1; i++) {
-          queryParam += this.formData.params[i].key + '=' + this.formData.params[i].value
-          for (j; j < l - 2; j++) {
-            queryParam += '&'
+        for (let i = 0; i < l - 1; i++) {
+          if (this.formData.params[i].key) {
+            queryParam += this.formData.params[i].key + '=' + this.formData.params[i].value + '&'
           }
         }
+        queryParam = queryParam.substr(0, queryParam.length - 1)
         this.queryUrl = baseUrl + this.formData.queryPath + queryParam
       },
       setHistory() {
