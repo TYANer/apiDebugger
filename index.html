@@ -115,7 +115,7 @@
                   <el-input v-model="scope.row.value" class="edit-input" size="small" @change="isBlank" />
                 </template>
               </el-table-column>
-              <el-table-column label="Delete" width="80px;">
+              <el-table-column width="80px;">
                 <template slot-scope="scope" v-if="scope.$index != (formData.params.length - 1)">
                   <el-button icon="el-icon-delete" size="small" plain type="danger" @click="removeParam(scope.$index)"></el-button>
                 </template>
@@ -144,12 +144,12 @@
             <div slot="header" class="clearfix">
               <span>请求结果</span>
             </div>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
+            <span class="label">请求时间：</span>
+            <el-tag type="info" style="margin-right: 20px;">{{requestTime}}</el-tag>
+            <span class="label">状态码：</span>
+            <el-tag :type="getStatus(statusCode)">{{statusCode}}</el-tag>
+            <el-tabs v-model="activeName">
               <el-tab-pane label="Body" name="first">
-                <span class="label">请求时间：</span>
-                <el-tag type="info">{{requestTime}}</el-tag>
-                <span class="label">状态码：</span>
-                <el-tag :type="getStatus(statusCode)">{{statusCode}}</el-tag>
                 <pre><code id="response" class="json">暂无结果</code></pre>
               </el-tab-pane>
               <el-tab-pane label="Headers" name="second">
@@ -300,9 +300,9 @@ const statusMap = new Map([
           // scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
         },
         formData: {
-          env: '',
-          service: '',
-          game: '',
+          env: 'dev',
+          service: 'chat',
+          game: 'ba',
           clientId: '',
           authType: '0',
           userType: '',
@@ -332,24 +332,24 @@ const statusMap = new Map([
     mounted() {
       let emptyParams = [{ key: '', value: '' }]
       // 读取缓存数据
-      this.formData.env = localStorage.getItem('env')
-      this.formData.service = localStorage.getItem('service')
-      this.formData.game = localStorage.getItem('game')
+      this.formData.env = localStorage.getItem('env') || 'dev'
+      this.formData.service = localStorage.getItem('service') || 'chat'
+      this.formData.game = localStorage.getItem('game') || 'ba'
       this.formData.authType = localStorage.getItem('authType') || '0'
-      this.formData.userType = localStorage.getItem('userType')
-      this.formData.username = localStorage.getItem('username')
-      this.formData.password = localStorage.getItem('password')
-      this.formData.token = localStorage.getItem('token')
+      this.formData.userType = localStorage.getItem('userType') || ''
+      this.formData.username = localStorage.getItem('username') || ''
+      this.formData.password = localStorage.getItem('password') || ''
+      this.formData.token = localStorage.getItem('token') || ''
       this.formData.authWay = localStorage.getItem('authWay') || 'auth'
       this.formData.queryMethod = localStorage.getItem('queryMethod') || 'GET'
-      this.formData.queryPath = localStorage.getItem('queryPath')
+      this.formData.queryPath = localStorage.getItem('queryPath') || ''
       this.formData.params = JSON.parse(localStorage.getItem('params')) || emptyParams
       this.checkedKeys = localStorage.getItem('scopeList') || []
       if (typeof (this.checkedKeys) == 'string') {
         this.checkedKeys = this.checkedKeys.split(',')
       }
       let h = JSON.parse(localStorage.getItem('historyList'))
-      this.historyList = (h == '') ? [] : h
+      this.historyList = (h == '' || h == null ) ? [] : h
     },
     created() {
       // 页面卸载之前存储信息
@@ -517,7 +517,7 @@ const statusMap = new Map([
         let code = document.getElementById("response")
         code.innerHTML = JSON.stringify(res.data, null, 2)
         let headers = document.getElementById("headers")
-        headers.innerHTML = JSON.stringify(res, null, 2)
+        headers.innerHTML = JSON.stringify(res.headers, null, 2)
         hljs.highlightBlock(code);
         hljs.highlightBlock(headers);
       },
@@ -555,9 +555,6 @@ const statusMap = new Map([
           }
         }
         this.queryUrl = baseUrl + this.formData.queryPath + queryParam
-      },
-      handleClick(tab, event) {
-        console.log(tab, event);
       },
       setHistory() {
         let history = {}
