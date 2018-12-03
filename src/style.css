@@ -52,9 +52,6 @@ header {
   margin-left: 15px;
 }
 /* layout-end */
-/* body {
-  background: #f4f5f6;
-} */
 .page-title {
   font-size: 20px;
   font-weight: normal;
@@ -66,7 +63,7 @@ header {
   width: 48px;
   height: 48px;
   content: '';
-  background-image: url('src/favicon.ico');
+  background-image: url('favicon.ico');
   vertical-align: middle;
   margin-right: 10px;
 }
@@ -78,9 +75,6 @@ header {
 .clearfix:after {
   clear: both
 }
-/* .box-card {
-  margin-top: 20px;
-} */
 .label {
   font-size: 14px;
   color: #606266;
@@ -101,15 +95,6 @@ header {
 }
 .el-form-item {
   margin-bottom: 10px;
-}
-/* .el-input-group>.el-input__inner {
-  width: 274px;
-} */
-.el-checkbox+.el-checkbox {
-  margin-left: 0;
-}
-.el-checkbox {
-  margin-right: 30px;
 }
 button.el-button.el-button--primary:hover {
   background: #66b1ff;
