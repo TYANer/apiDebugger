@@ -18,10 +18,6 @@
 
     <div class="left">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;">
-        <!-- <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>配置信息</span>
-          </div> -->
         <el-form :model="formData" style="margin: 15px;">
           <el-row>
             <el-form-item label="环境">
@@ -77,17 +73,11 @@
           </el-row>
 
           <el-row>
-            <!-- <el-form-item label="Scope"> -->
-            <!-- <el-checkbox-group v-model="formData.scopeList">
-                  <el-checkbox v-for="item in selectInfo.scope" :key="item" :label="item"></el-checkbox>
-                </el-checkbox-group> -->
             <label for="scopetree" class="label">Scope</label>
             <el-tree id="scopetree" :props="defaultProps" :data="selectInfo.scope" :default-checked-keys="checkedKeys"
               show-checkbox node-key="label" ref="tree">
-              <!-- </el-form-item> -->
           </el-row>
         </el-form>
-        <!-- </el-card> -->
       </el-scrollbar>
     </div>
 
@@ -97,7 +87,6 @@
 
           <section style="padding: 20px;">
             <el-row style="display: flex;">
-              <!-- <el-form-item label="请求路径" prop="queryPath"> -->
               <el-input placeholder="请输入路径，例如：/buylist" v-model="formData.queryPath" class="input-with-select">
                 <el-select style="width: 120px;text-align: center;" v-model="formData.queryMethod" slot="prepend"
                   placeholder="请求方法">
@@ -105,7 +94,6 @@
                 </el-select>
               </el-input>
               <el-button type="primary" @click="send('baseForm')" style="margin-left: 20px;">发送请求</el-button>
-              <!-- </el-form-item> -->
             </el-row>
             <el-table :data="formData.params" style="width: 100%" size="small">
               <el-table-column label="Key" min-width="120px">
@@ -126,23 +114,6 @@
             </el-table>
           </section>
 
-          <!-- <el-row v-for="(item,index) in formData.params">
-            <el-form-item>
-            <el-input placeholder="请输入内容" v-model="formData.params[index].key">
-              <template slot="prepend">key</template>
-            </el-input>
-            </el-form-item>
-            <el-form-item>
-            <el-input placeholder="请输入内容" v-model="formData.params[index].value">
-              <template slot="prepend">value</template>
-            </el-input>
-            </el-form-item>
-            <el-form-item>
-            <el-button icon="el-icon-delete" plain type="danger" @click="removeParam(index)"></el-button>
-            </el-form-item>
-          </el-row>
-          <el-form-item>
-          </el-form-item> -->
           <el-card class="box-card" style="margin:0 20px 20px 20px;">
             <div slot="header" class="clearfix">
               <span>请求结果</span>
@@ -205,23 +176,7 @@
   new Vue({
     el: '#app',
     data() {
-      // var checkifblank = (rule, value, callback) => {
-      //   if (!value) {
-      //     this.$message.error('错了哦，这是一条错误消息')
-      //   }
-      // }
       return {
-        // rules: {
-        //   password: [
-        //     { validator: checkifblank, trigger: 'blur' }
-        //   ],
-        //   username: [
-        //     { validator: checkifblank, trigger: 'blur' }
-        //   ],
-        //   queryPath: [
-        //     { validator: checkifblank, message: '请输入路径', trigger: 'blur' }
-        //   ]
-        // },
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -230,8 +185,6 @@
           env: ['dev', 'beta', 'gold'],
           service: ['auth2', 'chat', 'gateway', 'message', 'pay2', 'translate', 'auth', 'file-server', 'geoip', 'link', 'pay', 'ucenter'],
           game: ['tgstest', 'ba', 'G301', 'g303', 'B001', 'c4'],
-          // userType: ['facebook', 'twitter', 'weibo', 'googleplus', 'mobojoy', '360', 'uc', 'downjoy',
-          //   'xiaomi', 'qq', 'weixin', 'ly', 'openweixin', 'openqq', 'baidu', 'vivo', 'huawei', 'oppo', '1sdk', 'gamecenter'],
           userType: [{
             label: '服务账号',
             options: [{
@@ -360,8 +313,6 @@
               label: 'auth_system'
             }]
           }]
-          // scope: ['auth', 'auth_game_admin', 'message', 'message_admin', 'chat_admin', 'chat_system', 'ads_rw', 'pay_game_admin', 'pay', 'gateway_game_admin', 'link_admin', 'mail_admin', 'system', 'gateway_system', 'chat', 'pay_system', 'ads', 'message_system', 'auth2', 'auth_system']
-          // scope: ['auth', 'ads', 'auth_game_admin', 'ads_rw', 'pay', 'message', 'message_admin', 'chat', 'chat_admin', 'chat_system', 'pay_game_admin', 'gateway_game_admin', 'link_admin', 'mail_admin', 'auth2', 'system', 'pay_system', 'message_system', 'gateway_system', 'auth_system']
         },
         formData: {
           env: 'dev',
@@ -479,9 +430,6 @@
           let pattern = /^\//i
           if (pattern.test(this.formData.queryPath)) {
             let loading = this.$loading({ text: '正在请求...' })
-            // }
-            // this.$refs[formName].validate((valid) => {
-            //   if (valid) {
             this.formData.clientId = this.formData.game + ':1.0.0'
             var myDate = new Date();
             this.requestTime = myDate.toLocaleString()
@@ -494,9 +442,7 @@
           }
         } else {
           this.$message.error('验证信息没有填写完整！')
-          // return false
         }
-        // })
       },
       // 获取name服务的地址
       getNameAddr(env) {
