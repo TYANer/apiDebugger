@@ -172,6 +172,9 @@
               </template>
             </el-table-column>
             <el-table-column width="40px;">
+                <template slot="header" slot-scope="scope">
+                <el-button class="del" icon="el-icon-delete" type="text" @click="historyList = []"></el-button>
+                </template>
               <template slot-scope="scope">
                 <el-button class="del" icon="el-icon-delete" type="text" @click="removeHistory(scope.$index)"></el-button>
               </template>
