@@ -1,0 +1,112 @@
+/* reset-start */
+body,p,h1 {
+  margin: 0;
+  padding: 0;
+}
+/* reset-end */
+/* layout-start */
+.container {
+  position: relative;
+  height: 100vh;
+  min-width: 1000px;
+}
+header {
+  height: 60px;
+  position: relative;
+  width: 100vw;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+}
+.left {
+  padding: 0;
+  margin: 0;
+  width: 300px;
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+  height: calc(100vh - 60px);
+  background: #fff;
+}
+.main {
+  position: relative;
+  margin-left: 300px;
+  height: calc(100vh - 60px);
+}
+.middle,
+.right {
+  overflow: auto;
+  float: left;
+}
+.middle {
+  width: calc(100% - 315px);
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+  height: 100%;
+}
+.right {
+  width: 300px;
+  margin-left: 15px;
+}
+/* layout-end */
+.page-title {
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 60px;
+  padding-left: 10px;
+}
+.page-title:before {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  content: '';
+  background-image: url('favicon.ico');
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+.label {
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+}
+.del {
+  color: #606266;
+}
+/* element-ui style overwrite-start */
+.el-card__header {
+  background: #f4f5f6;
+}
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form-item {
+  margin-bottom: 10px;
+}
+button.el-button.el-button--primary:hover {
+  background: #66b1ff;
+  border-color: #66b1ff;
+  color: #fff;
+}
+button.el-button--primary:focus {
+  color: #fff;
+    background-color: #409EFF;
+    border-color: #409EFF;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+/* element-ui style overwrite-end */
