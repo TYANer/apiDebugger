@@ -33,9 +33,6 @@ new Vue({
             value: 'anonymous',
             label: 'anonymous'
           }, {
-            value: 'tap4fun',
-            label: 'tap4fun'
-          }, {
             value: 'baidu',
             label: 'baidu'
           }, {
@@ -285,7 +282,7 @@ new Vue({
       } else {
         env = ''
       }
-      let url = "https://eve" + env + ".pf.tap4fun.com:10443/config"
+      let url
       axios({
         method: 'GET',
         url: url,
